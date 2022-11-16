@@ -1,0 +1,78 @@
+version: '3'
+
+services:
+
+  mysql-integration:
+    image: mysql
+    build:
+      context: ./
+      dockerfile: mysql/Dockerfile
+    container_name: mysql-integration
+    restart: always
+    volumes:
+      - ./mysql/setup.sql:/docker-entrypoint-initdb.d/1.sql
+      - ./mysql/ds-mysql-initial-setup.sql:/docker-entrypoint-initdb.d/2.sql
+      - mysql-integration:/var/lib/mysql
+    ports:
+      - 3307:3306
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+      start_period: 5s
+      timeout: 10s
+    environment:
+      - MYSQL_ROOT_PASSWORD=htoh
+    networks:
+      assignment1-network:
+         ipv4_address: 172.16.0.52
+
+  spring-demo-integration:
+    build:
+      context: ./
+      dockerfile: ./spring-demo/Dockerfile
+    container_name: spring-demo-integration
+    restart: always
+    volumes:
+     - "spring-demo-integration:/spring-demo/war"
+    environment:
+      - DB_IP=172.16.0.52
+      - DB_PORT=3306
+      - DB_USER=htoh
+      - DB_PASSWORD=htoh
+      - DB_DBNAME=ds_assignment1
+    ports:
+      - 8080:8080
+    depends_on:
+      mysql-integration:
+         condition: service_healthy
+    networks:
+      assignment1-network:
+         ipv4_address: 172.16.0.53
+    
+  energy-visualization-platform-integration:
+    build:
+      context: ./
+      dockerfile: energy-visualization-platform/Dockerfile
+    container_name: energy-visualization-platform-integration
+    restart: always
+    ports:
+      - 3001:80
+    networks:
+      assignment1-network:
+         ipv4_address: 172.16.0.54
+
+volumes:
+  spring-demo-integration:
+    driver:
+      local
+  mysql-integration:
+    driver:
+      local
+  energy-visualization-platform-integration:
+    driver:
+      local
+
+networks:
+  assignment1-network:
+    external: true

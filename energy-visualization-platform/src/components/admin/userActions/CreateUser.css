@@ -1,0 +1,28 @@
+.input-container-row {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin: 20px 10px;
+}
+
+input[type="text"], input[type="password"], input[type="number"] {
+    height: 30px;
+    width: 100%;
+    margin-left: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.radio-button {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+h3, h5 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.form-user {
+    display: inline-block;
+    width: 70%;
+}

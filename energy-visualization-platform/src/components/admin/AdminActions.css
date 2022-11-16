@@ -1,0 +1,26 @@
+.device-button {
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    width: 200px;
+    border-radius: 5px;
+    background-color: green;
+    color: white;
+    border-color: green;
+}
+
+.device-button:hover {
+    background-color: darkgreen;
+    color: white;
+}
+
+.button-container-admin-actions{
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    background-color: #EBDE9A;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+

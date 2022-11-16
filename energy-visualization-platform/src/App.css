@@ -1,0 +1,138 @@
+.app {
+  text-align: center;
+  justify-content: center;
+  flex-direction: column;
+  background-image: url("img/b2.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  height: 96vh;
+  width: auto;
+  display: flex;
+  align-items: center;
+  font-family: Georgia, serif;
+  font-size: 18px;
+}
+
+input[type="text"], input[type="password"] {
+  height: 30px;
+  width: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.input-container-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 30px 10px;
+  text-align: left;
+}
+
+input[type="submit"] {
+  margin-bottom: 10px;
+  cursor: pointer;
+  background: #74A43D;
+  border: white;
+  color: #fff;
+  padding: 10px;
+  width: 200px;
+  border-radius: 5px;
+}
+
+input[type="submit"]:hover {
+  background: #5B842D;
+}
+
+.button-container {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  margin-top: 50px;
+}
+
+.login-form {
+  background: linear-gradient(to bottom right, rgba(134,236,147,1.0),rgba(254,243,189,1.0), rgba(134,236,147,1.0));
+  padding: 60px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  width: 1000px;
+  border-radius: 100px;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+}
+
+.go-back {
+  align-items: center;
+  justify-content: center;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  border-radius: 5px;
+  background-color: transparent;
+  color: black;
+  width: 200px;
+  border-width: 1px;
+  border-color: #0F2F64;
+}
+
+.go-back:hover {
+  background-color: #0F2F64;
+  color: white;
+}
+
+.users-button {
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  width: 200px;
+  border-radius: 5px;
+  background-color: #4169e1;
+  color: white;
+  border-color: #4169e1;
+}
+
+.users-button:hover {
+  background-color: #3353B2;
+}
+
+.log-in-button {
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  width: 200px;
+  border-radius: 5px;
+  background-color: #74A43D;
+  color: white;
+  border-color: #74A43D;
+}
+
+.log-in-button:hover {
+  background-color: #5B842D;
+}
+
+.select-user, .select-device {
+  width: 50%;
+}
+
+.select-user-mini-form, .select-device-mini-form {
+  width: 100%;
+}
+
+textarea {
+  width: 100%;
+}
+
+h3,h4 {
+  padding-bottom: 10px;
+}
+
+.container-multiple-cols{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+

@@ -1,0 +1,56 @@
+.mappings-button {
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    width: 200px;
+    border-radius: 5px;
+    background-color: #009688;
+    color: white;
+    border-color: #009688;
+}
+
+.mappings-button:hover {
+    background-color: #037C71;
+    color: white;
+}
+
+.form-container-device{
+    margin: 10px 20px 20px;
+    width: 65%;
+    background-color: #EBDE9A;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.form-container-user{
+    margin: 10px 20px 20px;
+    width: 35%;
+    background-color: #EBDE9A;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.login-form-mappings {
+    width: 1200px;
+    padding: 60px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    background:linear-gradient(to bottom right, rgba(134,236,147,1.0),rgba(254,243,189,1.0), rgba(134,236,147,1.0));
+    border-radius: 100px;
+}
+
+button[type="submit"] {
+    margin-bottom: 10px;
+    cursor: pointer;
+    background: #74A43D;
+    border: white;
+    color: #fff;
+    padding: 10px 30px;
+    width: auto;
+    border-radius: 5px;
+}
+
+button[type="submit"]:hover {
+    background-color: #5B842D;
+}
