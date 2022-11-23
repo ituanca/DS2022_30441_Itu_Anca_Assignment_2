@@ -68,27 +68,27 @@ public class HourlyEnergyConsumptionService {
         return LocalDateTime.of(2022, month, randomDay, randomHour, 0, 0);
     }
 
-    @PostConstruct
-    private void addValues(){
-        List<Device> devices = deviceService.findDeviceByOwner(personService.findPersonByUsername("anca").orElse(null));
-        Random random = new Random();
-        if(!devices.isEmpty()){
-            for(int i=0; i<5; i++) {
-                for(Device device : devices){
-                    HourlyEnergyConsumption hourlyEnergyConsumption =
-                            new HourlyEnergyConsumption(
-                                    device,
-                                    generateRandomTimestamp(Month.NOVEMBER, 10),
-                                    generateRandomEnergyConsumptionForDevice(device, random));
-                    if(!hourlyEnergyConsumptionRepository.findByTimestampAndDevice(
-                                    hourlyEnergyConsumption.getTimestamp(),
-                                    hourlyEnergyConsumption.getDevice())
-                            .isPresent()){
-                        hourlyEnergyConsumptionRepository.save(hourlyEnergyConsumption);
-                    }
-                }
-            }
-        }
-    }
+//    @PostConstruct
+//    private void addValues(){
+//        List<Device> devices = deviceService.findDeviceByOwner(personService.findPersonByUsername("anca").orElse(null));
+//        Random random = new Random();
+//        if(!devices.isEmpty()){
+//            for(int i=0; i<5; i++) {
+//                for(Device device : devices){
+//                    HourlyEnergyConsumption hourlyEnergyConsumption =
+//                            new HourlyEnergyConsumption(
+//                                    device,
+//                                    generateRandomTimestamp(Month.NOVEMBER, 10),
+//                                    generateRandomEnergyConsumptionForDevice(device, random));
+//                    if(!hourlyEnergyConsumptionRepository.findByTimestampAndDevice(
+//                                    hourlyEnergyConsumption.getTimestamp(),
+//                                    hourlyEnergyConsumption.getDevice())
+//                            .isPresent()){
+//                        hourlyEnergyConsumptionRepository.save(hourlyEnergyConsumption);
+//                    }
+//                }
+//            }
+//        }
+//    }
 
 }
