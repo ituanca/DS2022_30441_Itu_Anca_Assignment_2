@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.tuc.ds2022.dtos.DeviceDTO;
+import ro.tuc.ds2022.wrappers.DeviceList;
 import ro.tuc.ds2022.services.DeviceService;
 
 import javax.validation.Valid;
@@ -79,7 +80,7 @@ public class DeviceController {
     }
 
     @GetMapping(value = "/withOwner")
-    public ResponseEntity<List<DeviceDTO>> getDevicesWithOwner() {
+    public ResponseEntity<List<DeviceDTO>> getDevicesDTOWithOwner() {
         List<DeviceDTO> dtos = deviceService.findDevicesDTOWithOwner();
         for(DeviceDTO dto : dtos){
             Link deviceLink = linkTo(methodOn(DeviceController.class)
@@ -87,6 +88,11 @@ public class DeviceController {
             dto.add(deviceLink);
         }
         return new ResponseEntity<>(dtos, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/devicesWithOwner")
+    public DeviceList getDevicesWithOwner() {
+        return deviceService.findDeviceListWithOwner();
     }
 
     @PutMapping(value = "/updateAssociation")

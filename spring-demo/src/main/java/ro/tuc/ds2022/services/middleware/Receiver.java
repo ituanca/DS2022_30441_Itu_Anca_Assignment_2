@@ -13,7 +13,6 @@ public class Receiver {
 
     @RabbitListener(queues = Ds2022Application.QUEUE_SPECIFIC_NAME)
     public void receiveMessage(String message) {
-        System.out.println("Received message: " + message);
         logger.info("Received message: "+  message);
     }
 

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ro.tuc.ds2022.dtos.DeviceDTO;
 import ro.tuc.ds2022.dtos.builders.DeviceBuilder;
 import ro.tuc.ds2022.entities.Device;
+import ro.tuc.ds2022.wrappers.DeviceList;
 import ro.tuc.ds2022.entities.Person;
 import ro.tuc.ds2022.handlers.exceptions.model.ResourceNotFoundException;
 import ro.tuc.ds2022.repositories.DeviceRepository;
@@ -145,7 +146,7 @@ public class DeviceService {
         return "error";
     }
 
-    public List<Device> findDevicesWithOwner() {
+    public DeviceList findDeviceListWithOwner() {
         List<Device> devices = deviceRepository.findAll();
         List<Device> devicesWithOwner = new ArrayList<>();
         for(Device d : devices){
@@ -153,7 +154,13 @@ public class DeviceService {
                 devicesWithOwner.add(d);
             }
         }
-        return devicesWithOwner;
+        DeviceList deviceList = new DeviceList();
+        deviceList.setDevices(devicesWithOwner);
+        for(Device d: deviceList.getDevices()){
+            d.setOwner(null);
+            d.setListHourlyConsumption(null);
+        }
+        return deviceList;
     }
 
     public String updateAssociation(String deviceName, String ownerUsername) {
