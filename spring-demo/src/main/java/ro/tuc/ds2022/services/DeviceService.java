@@ -135,6 +135,23 @@ public class DeviceService {
                 .collect(Collectors.toList());
     }
 
+    public DeviceList findDeviceListWithOwner() {
+        List<Device> devices = deviceRepository.findAll();
+        List<Device> devicesWithOwner = new ArrayList<>();
+        for(Device d : devices){
+            if(d.getOwner()!=null){
+                devicesWithOwner.add(d);
+            }
+        }
+        DeviceList deviceListObject = new DeviceList();
+        deviceListObject.setDevices(devicesWithOwner);
+        for(Device d: deviceListObject.getDevices()){
+            d.setOwner(null);
+            d.setListHourlyConsumption(null);
+        }
+        return deviceListObject;
+    }
+
     public String createAssociation(String deviceName, String ownerUsername){
         Device device = deviceRepository.findByName(deviceName).orElse(null);
         Person owner = personService.findPersonByUsername(ownerUsername).orElse(null);
@@ -144,23 +161,6 @@ public class DeviceService {
             return "ok";
         }
         return "error";
-    }
-
-    public DeviceList findDeviceListWithOwner() {
-        List<Device> devices = deviceRepository.findAll();
-        List<Device> devicesWithOwner = new ArrayList<>();
-        for(Device d : devices){
-            if(d.getOwner()!=null){
-                devicesWithOwner.add(d);
-            }
-        }
-        DeviceList deviceList = new DeviceList();
-        deviceList.setDevices(devicesWithOwner);
-        for(Device d: deviceList.getDevices()){
-            d.setOwner(null);
-            d.setListHourlyConsumption(null);
-        }
-        return deviceList;
     }
 
     public String updateAssociation(String deviceName, String ownerUsername) {

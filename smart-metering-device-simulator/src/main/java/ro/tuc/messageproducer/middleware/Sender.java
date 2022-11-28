@@ -2,6 +2,8 @@ package ro.tuc.messageproducer.middleware;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -21,7 +23,6 @@ import java.io.IOException;
 public class Sender {
 
     private final RabbitTemplate rabbitTemplate;
-    //Double energyConsumptionValue;
 
     @Autowired
     private Reader reader;
@@ -38,9 +39,10 @@ public class Sender {
     public void sendMessage() throws IOException {
         List<Device> devices = getDevices();
         List<String> message = new ArrayList<>();
+        Double energyConsumptionValue = readFromFile();
         for(Device d: devices){
-            Double energyConsumptionValue = readFromFile();
             Measurement measurement = new Measurement();
+            measurement.setTimestamp(LocalDateTime.now(ZoneId.of("Europe/Bucharest")));
             measurement.setDeviceId(d.getId());
             measurement.setEnergyConsumption(energyConsumptionValue);
             message.add(measurement.toString());

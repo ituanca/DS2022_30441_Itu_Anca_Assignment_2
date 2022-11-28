@@ -19,4 +19,12 @@ public class Measurement {
 
     private Double energyConsumption;
 
+    @Override
+    public String toString() {
+        return "Measurement{" +
+                "timestamp=" + timestamp +
+                ", deviceId=" + deviceId +
+                ", energyConsumption=" + energyConsumption +
+                '}';
+    }
 }

@@ -21,10 +21,4 @@ public class Device {
 
     private Double maxHourlyEnergyConsumption;
 
-    public Device(String name, String description, String address, Double maxHourlyEnergyConsumption) {
-        this.name = name;
-        this.description = description;
-        this.address = address;
-        this.maxHourlyEnergyConsumption = maxHourlyEnergyConsumption;
-    }
 }
