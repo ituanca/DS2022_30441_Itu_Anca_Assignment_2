@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import ro.tuc.ds2022.measurements.Measurement;
 import ro.tuc.ds2022.services.HourlyEnergyConsumptionService;
 
+import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +25,11 @@ public class Receiver {
     }
 
     @RabbitListener(queues = ReceiverConfig.QUEUE_NAME)
-    public void receiveMessage(List<String> message) {
+    public void receiveMessage(List<String> message) throws ParseException {
         logger.info("Received message: " +  message);
         List<Measurement> measurements = createArrayOfMeasurements(message);
         hourlyEnergyConsumptionService.insertEnergyConsumptionValues(measurements);
+        hourlyEnergyConsumptionService.checkIfLimitExceeded(measurements);
     }
 
     private List<Measurement> createArrayOfMeasurements(List<String> measurementsStringList){

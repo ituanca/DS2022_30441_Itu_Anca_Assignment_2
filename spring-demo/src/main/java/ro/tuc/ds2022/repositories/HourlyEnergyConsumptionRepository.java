@@ -27,4 +27,13 @@ public interface HourlyEnergyConsumptionRepository extends JpaRepository<HourlyE
             "AND month(h.timestamp) = month(:date) " +
             "AND day(h.timestamp) = day(:date)")
     List<HourlyEnergyConsumption> findByDateAndDevice(Date date, Device device);
+
+    @Query(value = "SELECT h " +
+            "FROM HourlyEnergyConsumption h " +
+            "WHERE h.device = :device " +
+            "AND year(h.timestamp) = year(:date) " +
+            "AND month(h.timestamp) = month(:date) " +
+            "AND day(h.timestamp) = day(:date)" +
+            "AND hour(h.timestamp) = :hour")
+    List<HourlyEnergyConsumption> findByDateAndHourAndDevice(Date date, Integer hour, Device device);
 }
