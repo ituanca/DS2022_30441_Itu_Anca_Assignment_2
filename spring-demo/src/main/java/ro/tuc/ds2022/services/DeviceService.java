@@ -40,13 +40,17 @@ public class DeviceService {
         return deviceRepository.findAll();
     }
 
-    public DeviceDTO findDeviceById(Integer id) {
+    public DeviceDTO findDeviceDTOById(Integer id) {
         Optional<Device> deviceOptional = deviceRepository.findById(id);
         if (!deviceOptional.isPresent()) {
             log.error("Device with id {} was not found in db", id);
             throw new ResourceNotFoundException(Device.class.getSimpleName() + " with id: " + id);
         }
         return DeviceBuilder.toDeviceDTO(deviceOptional.get());
+    }
+
+    public Device findDeviceById(Integer id) {
+        return deviceRepository.findById(id).orElse(null);
     }
 
     public Device findDeviceByName(String name) {

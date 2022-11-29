@@ -1,6 +1,7 @@
 package ro.tuc.ds2022.entities;
 
 import lombok.*;
+import ro.tuc.ds2022.dtos.DeviceDTO;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

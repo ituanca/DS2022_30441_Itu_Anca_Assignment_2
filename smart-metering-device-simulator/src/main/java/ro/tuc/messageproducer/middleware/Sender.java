@@ -15,6 +15,7 @@ import ro.tuc.messageproducer.devices.Device;
 import ro.tuc.messageproducer.devices.DeviceService;
 import ro.tuc.messageproducer.measurements.Measurement;
 import ro.tuc.messageproducer.reader.Reader;
+import ro.tuc.messageproducer.reader.ReaderConfig;
 
 import java.io.IOException;
 
@@ -36,27 +37,31 @@ public class Sender {
 
 //    @Scheduled(fixedDelay = 600000L)  // 10 minutes
     @Scheduled(fixedDelay = 10000L)  // 10 seconds
-    public void sendMessage() throws IOException {
+    public void composeAndSendMessage() throws IOException {
         List<Device> devices = getDevices();
         List<String> message = new ArrayList<>();
         Double energyConsumptionValue = readFromFile();
         for(Device d: devices){
-            Measurement measurement = new Measurement();
-            measurement.setTimestamp(LocalDateTime.now(ZoneId.of("Europe/Bucharest")));
-            measurement.setDeviceId(d.getId());
-            measurement.setEnergyConsumption(energyConsumptionValue);
+            Measurement measurement = new Measurement(
+                    LocalDateTime.now(ZoneId.of("Europe/Bucharest")),
+                    d.getId(),
+                    energyConsumptionValue
+            );
             message.add(measurement.toString());
         }
-
         log.info("Sending message...");
+//        rabbitTemplate.convertAndSend(ReaderConfig.EXCHANGE_NAME, ReaderConfig.ROUTING_KEY, message, m -> {
+//            m.getMessageProperties().setContentType("application/json");
+//            return m;
+//        });
         rabbitTemplate.convertAndSend(
-                MessageProducerApplication.EXCHANGE_NAME,
-                MessageProducerApplication.ROUTING_KEY,
+                ReaderConfig.EXCHANGE_NAME,
+                ReaderConfig.ROUTING_KEY,
                 message
         );
     }
 
-    public Double readFromFile() throws IOException{
+    private Double readFromFile() throws IOException{
         return reader.readFromFile();
     }
 

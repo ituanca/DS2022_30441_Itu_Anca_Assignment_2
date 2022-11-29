@@ -18,4 +18,5 @@ public class DeviceList {
     public DeviceList() {
         devices = new ArrayList<>();
     }
+
 }

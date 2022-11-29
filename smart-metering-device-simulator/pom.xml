@@ -99,7 +99,6 @@
 			<version>2.4.7</version>
 		</dependency>
 
-
 		<!-- TESTING -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

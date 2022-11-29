@@ -1,4 +1,5 @@
-package ro.tuc.messageproducer.measurements;
+package ro.tuc.ds2022.measurements;
+
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;

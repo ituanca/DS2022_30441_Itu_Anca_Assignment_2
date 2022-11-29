@@ -39,7 +39,7 @@ public class DeviceController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<DeviceDTO> getDevice(@PathVariable("id") Integer deviceId) {
-        DeviceDTO dto = deviceService.findDeviceById(deviceId);
+        DeviceDTO dto = deviceService.findDeviceDTOById(deviceId);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 

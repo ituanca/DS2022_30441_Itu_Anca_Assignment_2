@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ro.tuc.ds2022.entities.Device;
 import ro.tuc.ds2022.entities.HourlyEnergyConsumption;
+import ro.tuc.ds2022.measurements.Measurement;
 import ro.tuc.ds2022.repositories.HourlyEnergyConsumptionRepository;
 
-import javax.annotation.PostConstruct;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -66,6 +66,22 @@ public class HourlyEnergyConsumptionService {
         int randomDay = ThreadLocalRandom.current().nextInt(minDay, maxDay);
         int randomHour = ThreadLocalRandom.current().nextInt(minHour, maxHour);
         return LocalDateTime.of(2022, month, randomDay, randomHour, 0, 0);
+    }
+
+    public void insertEnergyConsumptionValues(List<Measurement> measurements){
+       for(Measurement measurement : measurements){
+           HourlyEnergyConsumption hourlyEnergyConsumption =
+                            new HourlyEnergyConsumption(
+                                    deviceService.findDeviceById(measurement.getDeviceId()),
+                                    measurement.getTimestamp(),
+                                    measurement.getEnergyConsumption());
+           if(!hourlyEnergyConsumptionRepository.findByTimestampAndDevice(
+                                    hourlyEnergyConsumption.getTimestamp(),
+                                    hourlyEnergyConsumption.getDevice())
+                            .isPresent()){
+                        hourlyEnergyConsumptionRepository.save(hourlyEnergyConsumption);
+                    }
+       }
     }
 
 //    @PostConstruct

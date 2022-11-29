@@ -14,9 +14,6 @@ public class DeviceService {
         if(response!=null){
             devices = response.getDevices();
         }
-        for(Device d : devices){
-            System.out.println(d.getId() + " " + d.getName() + " " + d.getAddress());
-        }
         return devices;
     }
 
