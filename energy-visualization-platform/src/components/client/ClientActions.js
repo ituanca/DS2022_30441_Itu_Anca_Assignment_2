@@ -1,11 +1,26 @@
 import {Link} from "react-router-dom";
+import Popup from "../webSocketConnection/Popup";
+import React, {useEffect, useState} from "react";
+import Connect from "../webSocketConnection/Connection";
 
 function ClientActions(){
+
+    const [popupTriggered, setPopupTriggered] = useState(false);
+
+    useEffect(() => {
+        setTimeout(() => {
+            setPopupTriggered(true);
+        }, 3000);
+    }, []);
 
     return (
         <div className="app">
             <div className="login-form">
                 <h3>Client</h3>
+                <Popup trigger={popupTriggered} setTrigger={setPopupTriggered}>
+                    <h3>One of your devices overcame its threshold!</h3>
+                    <Connect></Connect>
+                </Popup>
                 <div className="button-container">
                     <div>
                         <Link to="/ViewDevices">

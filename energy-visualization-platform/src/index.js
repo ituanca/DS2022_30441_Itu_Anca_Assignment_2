@@ -21,6 +21,8 @@ import DeleteMappings from "./components/admin/mappingActions/DeleteMappings";
 import EditMappings from "./components/admin/mappingActions/EditMappings";
 import ViewMappings from "./components/admin/mappingActions/ViewMappings";
 import ViewDailyEnergyConsumption from "./components/client/ViewDailyEnergyConsumption";
+import Connect from "./components/webSocketConnection/Connection";
+import Popup from "./components/webSocketConnection/Popup";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -45,6 +47,8 @@ root.render(
               <Route path="/ClientActions" element={<ClientActions />} />
               <Route path="/ViewDevices" element={<ViewDevices />} />
               <Route path="/ViewDailyEnergyConsumption" element={<ViewDailyEnergyConsumption />} />
+              <Route path="/Connect" element={<Connect />} />
+              <Route path="/Popup" element={<Popup />} />
           </Routes>
       </BrowserRouter>,
   </React.StrictMode>
