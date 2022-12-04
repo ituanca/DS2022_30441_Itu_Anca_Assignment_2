@@ -1,27 +1,24 @@
 package ro.tuc.ds2022.services;
 
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ro.tuc.ds2022.entities.Device;
 import ro.tuc.ds2022.entities.HourlyEnergyConsumption;
+import ro.tuc.ds2022.entities.Person;
 import ro.tuc.ds2022.measurements.Measurement;
 import ro.tuc.ds2022.repositories.HourlyEnergyConsumptionRepository;
-import ro.tuc.ds2022.services.middleware.Receiver;
 
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
-
 
 @Service
 public class HourlyEnergyConsumptionService {
@@ -62,84 +59,80 @@ public class HourlyEnergyConsumptionService {
         return listOfEnergyConsumptionByHour;
     }
 
-//    private Double generateRandomEnergyConsumptionForDevice(Device device, Random random){
-//        return ThreadLocalRandom.current().nextDouble(0,device.getMaxHourlyEnergyConsumption());
-//    }
-//
-//    private LocalDateTime generateRandomTimestamp(Month month, int maxDay){
-//        int minDay = 1;
-//        int minHour = 0;
-//        int maxHour = 23;
-//        int randomDay = ThreadLocalRandom.current().nextInt(minDay, maxDay);
-//        int randomHour = ThreadLocalRandom.current().nextInt(minHour, maxHour);
-//        return LocalDateTime.of(2022, month, randomDay, randomHour, 0, 0);
-//    }
-
-    public void insertEnergyConsumptionValues(List<Measurement> measurements){
+    public void insertEnergyConsumptionValues(List<Measurement> measurements) throws ParseException {
        for(Measurement measurement : measurements){
-           HourlyEnergyConsumption hourlyEnergyConsumption =
-                            new HourlyEnergyConsumption(
-                                    deviceService.findDeviceById(measurement.getDeviceId()),
-                                    measurement.getTimestamp(),
-                                    measurement.getEnergyConsumption());
-           if(!hourlyEnergyConsumptionRepository.findByTimestampAndDevice(
-                                    hourlyEnergyConsumption.getTimestamp(),
-                                    hourlyEnergyConsumption.getDevice())
-                            .isPresent()){
-                        hourlyEnergyConsumptionRepository.save(hourlyEnergyConsumption);
-                    }
+           HourlyEnergyConsumption registeredEnergyConsumptionForDeviceByDateAndHour =
+                   findEnergyConsumptionForDeviceByDateAndHour(measurement.getDeviceId(), measurement.getTimestamp());
+           if(registeredEnergyConsumptionForDeviceByDateAndHour!=null) { // if there already exists a value registered for that hour
+               registeredEnergyConsumptionForDeviceByDateAndHour.setDevice(deviceService.findDeviceById(measurement.getDeviceId()));
+               registeredEnergyConsumptionForDeviceByDateAndHour.setTimestamp(measurement.getTimestamp());
+               registeredEnergyConsumptionForDeviceByDateAndHour.setEnergyConsumption(measurement.getEnergyConsumption());
+               hourlyEnergyConsumptionRepository.save(registeredEnergyConsumptionForDeviceByDateAndHour);
+           }else{
+               HourlyEnergyConsumption hourlyEnergyConsumption =
+                       new HourlyEnergyConsumption(
+                               deviceService.findDeviceById(measurement.getDeviceId()),
+                               measurement.getTimestamp(),
+                               measurement.getEnergyConsumption());
+               hourlyEnergyConsumptionRepository.save(hourlyEnergyConsumption);
+           }
        }
     }
 
-//    @PostConstruct
-//    private void addValues(){
-//        List<Device> devices = deviceService.findDeviceByOwner(personService.findPersonByUsername("anca").orElse(null));
-//        Random random = new Random();
-//        if(!devices.isEmpty()){
-//            for(int i=0; i<5; i++) {
-//                for(Device device : devices){
-//                    HourlyEnergyConsumption hourlyEnergyConsumption =
-//                            new HourlyEnergyConsumption(
-//                                    device,
-//                                    generateRandomTimestamp(Month.NOVEMBER, 10),
-//                                    generateRandomEnergyConsumptionForDevice(device, random));
-//                    if(!hourlyEnergyConsumptionRepository.findByTimestampAndDevice(
-//                                    hourlyEnergyConsumption.getTimestamp(),
-//                                    hourlyEnergyConsumption.getDevice())
-//                            .isPresent()){
-//                        hourlyEnergyConsumptionRepository.save(hourlyEnergyConsumption);
-//                    }
-//                }
-//            }
-//        }
-//    }
-
-    public void checkIfLimitExceeded(List<Measurement> measurements) throws ParseException {
-        for(Measurement measurement : measurements){
-            double totalAtSpecifiedHour = computeTotalEnergyConsumptionAtSpecifiedHour(measurement);
-            Device device = deviceService.findDeviceById(measurement.getDeviceId());
-            boolean limitExceeded = totalAtSpecifiedHour > device.getMaxHourlyEnergyConsumption();
-            if(limitExceeded){
-                System.out.println("EXCEEDED!!!! - " + device.getName() + " max accepted value: " + device.getMaxHourlyEnergyConsumption() + ", registered value: " + totalAtSpecifiedHour);
-            }
-        }
-    }
-
-    private Double computeTotalEnergyConsumptionAtSpecifiedHour(Measurement measurement) throws ParseException {
-        List<HourlyEnergyConsumption> registeredHourlyEnergyConsumption =
-                findEnergyConsumptionForDeviceByDateAndHour(measurement.getDeviceId(), measurement.getTimestamp());
-        double totalHourlyEnergyConsumption = 0;
-        for(HourlyEnergyConsumption registeredValue : registeredHourlyEnergyConsumption){
-            totalHourlyEnergyConsumption = totalHourlyEnergyConsumption + registeredValue.getEnergyConsumption();
-        }
-        logger.info(String.valueOf(totalHourlyEnergyConsumption));
-        return totalHourlyEnergyConsumption;
-    }
-
-    private List<HourlyEnergyConsumption> findEnergyConsumptionForDeviceByDateAndHour(Integer deviceId, LocalDateTime timestamp) throws ParseException {
+    private HourlyEnergyConsumption findEnergyConsumptionForDeviceByDateAndHour(Integer deviceId, LocalDateTime timestamp) {
         Device device = deviceService.findDeviceById(deviceId);
-        Date date = Date.from(timestamp.atZone(ZoneId.of("Europe/Bucharest")).toInstant());
+        LocalDate date = timestamp.toLocalDate();
         Integer hour = timestamp.getHour();
         return hourlyEnergyConsumptionRepository.findByDateAndHourAndDevice(date, hour, device);
+    }
+
+    public Boolean checkIfLimitExceededForUser(String username) {
+        Person person = personService.findPersonByUsername(username).orElse(null);
+        if(person!=null){
+            List<Device> devices = person.getDevices();
+            for(Device device : devices){
+                List<HourlyEnergyConsumption> listOfRegisteredHourlyEnergyConsumption =
+                        hourlyEnergyConsumptionRepository.findByDevice(device);
+                for(HourlyEnergyConsumption consumption : listOfRegisteredHourlyEnergyConsumption){
+                    double totalAtSpecifiedHour = consumption.getEnergyConsumption();
+                    boolean limitExceeded = totalAtSpecifiedHour > device.getMaxHourlyEnergyConsumption();
+                    if(limitExceeded){
+                        logger.info("EXCEEDED!!!! - " + device.getName());
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public String generateMessageForLimitExceeded(String username){
+        Person person = personService.findPersonByUsername(username).orElse(null);
+        StringBuilder message = new StringBuilder();
+        if(person!=null){
+            List<Device> devices = person.getDevices();
+            for(Device device : devices){
+                List<HourlyEnergyConsumption> listOfRegisteredHourlyEnergyConsumption =
+                        hourlyEnergyConsumptionRepository.findByDevice(device);
+                for(HourlyEnergyConsumption consumption : listOfRegisteredHourlyEnergyConsumption){
+                    double totalAtSpecifiedHour = consumption.getEnergyConsumption();
+                    boolean limitExceeded = totalAtSpecifiedHour > device.getMaxHourlyEnergyConsumption();
+                    if(limitExceeded){
+                        message.append(username)
+                                .append(", your device ")
+                                .append(device.getName())
+                                .append(" consumed a quantity of ")
+                                .append(totalAtSpecifiedHour)
+                                .append("kW on ").append(consumption.getTimestamp().toLocalDate())
+                                .append(" at ").append(consumption.getTimestamp().toLocalTime())
+                                .append(". The maximum accepted hourly energy consumption for this device is ")
+                                .append(device.getMaxHourlyEnergyConsumption())
+                                .append("!").append("***");
+                        break;
+                    }
+                }
+            }
+        }
+        return message.toString();
     }
 }

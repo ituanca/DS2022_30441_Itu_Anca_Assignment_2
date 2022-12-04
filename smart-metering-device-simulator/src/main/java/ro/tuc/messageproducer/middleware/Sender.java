@@ -10,7 +10,6 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import ro.tuc.messageproducer.MessageProducerApplication;
 import ro.tuc.messageproducer.devices.Device;
 import ro.tuc.messageproducer.devices.DeviceService;
 import ro.tuc.messageproducer.measurements.Measurement;
@@ -35,8 +34,8 @@ public class Sender {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-//    @Scheduled(fixedDelay = 600000L)  // 10 minutes
-    @Scheduled(fixedDelay = 10000L)  // 10 seconds
+    @Scheduled(fixedDelay = 600000L)  // 10 minutes
+    //@Scheduled(fixedDelay = 10000L)  // 10 seconds
     public void composeAndSendMessage() throws IOException {
         List<Device> devices = getDevices();
         List<String> message = new ArrayList<>();
@@ -50,10 +49,6 @@ public class Sender {
             message.add(measurement.toString());
         }
         log.info("Sending message...");
-//        rabbitTemplate.convertAndSend(ReaderConfig.EXCHANGE_NAME, ReaderConfig.ROUTING_KEY, message, m -> {
-//            m.getMessageProperties().setContentType("application/json");
-//            return m;
-//        });
         rabbitTemplate.convertAndSend(
                 ReaderConfig.EXCHANGE_NAME,
                 ReaderConfig.ROUTING_KEY,

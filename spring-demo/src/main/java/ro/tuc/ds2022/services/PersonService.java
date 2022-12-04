@@ -113,7 +113,7 @@ public class PersonService {
             person.setType(personDTO.getType());
 
             personRepository.save(person);
-            log.debug("Person with id {} was inserted in db", person.getId());
+            log.debug("Person with id {} was updated in db", person.getId());
             return "ok";
         }
         return "error";

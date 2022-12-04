@@ -29,7 +29,6 @@ public class Receiver {
         logger.info("Received message: " +  message);
         List<Measurement> measurements = createArrayOfMeasurements(message);
         hourlyEnergyConsumptionService.insertEnergyConsumptionValues(measurements);
-        hourlyEnergyConsumptionService.checkIfLimitExceeded(measurements);
     }
 
     private List<Measurement> createArrayOfMeasurements(List<String> measurementsStringList){
