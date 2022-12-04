@@ -8,7 +8,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
 @CrossOrigin
 public class WebSocketController {
@@ -16,15 +15,13 @@ public class WebSocketController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
-    @MessageMapping("/private-message")
-    public String pushNotification(@Payload String message){
+    public String sendNotificationToUser(@Payload String message){
         String username = "anca";
         message = "this is the message";
         simpMessagingTemplate.convertAndSendToUser(username, "/private", message); // /user/anca/private
         return message;
     }
 
-    @MessageMapping("/news")
     @SendTo("/topic/news")
     public String broadcastNews(@Payload String message) {
         return message;

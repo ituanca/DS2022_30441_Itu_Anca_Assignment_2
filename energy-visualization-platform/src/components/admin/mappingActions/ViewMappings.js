@@ -1,14 +1,10 @@
 import React, {useEffect, useState} from "react";
 import {Link, Outlet} from "react-router-dom";
 import "./EditMappings.css"
-import axios from "axios";
 
 function ViewMappings(){
 
-    const [errorMessages, setErrorMessages] = useState({});
-    const [isSubmitted, setIsSubmitted] = useState(false);
-    const [deviceIsSelected, setDeviceIsSelected] = useState(false);
-    const [userIsSelected, setUserIsSelected] = useState(false);
+    const [, setDeviceIsSelected] = useState(false);
     const [device, setDevice] = useState({
         name: "",
         description: "",
@@ -24,16 +20,7 @@ function ViewMappings(){
         age: "",
         type: ""
     });
-    const [users, setUsers] = useState( [] );
-
-    const errors = {
-        error: "an error occurred, the mapping cannot be updated"
-    };
-
-    const renderErrorMessage = (name) =>
-        name === errorMessages.name && (
-            <div className="error">{errorMessages.message}</div>
-        );
+    const [, setUsers] = useState( [] );
 
     useEffect(() => {
         fetch('http://localhost:8080/device/withOwner')

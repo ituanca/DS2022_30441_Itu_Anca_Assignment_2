@@ -7,8 +7,8 @@ function EditMappings(){
 
     const [errorMessages, setErrorMessages] = useState({});
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const [deviceIsSelected, setDeviceIsSelected] = useState(false);
-    const [userIsSelected, setUserIsSelected] = useState(false);
+    const [, setDeviceIsSelected] = useState(false);
+    const [, setUserIsSelected] = useState(false);
     const [device, setDevice] = useState({
         name: "",
         description: "",

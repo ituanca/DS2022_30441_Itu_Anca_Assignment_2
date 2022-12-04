@@ -7,7 +7,7 @@ function DeleteMappings(){
 
     const [errorMessages, setErrorMessages] = useState({});
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const [deviceIsSelected, setDeviceIsSelected] = useState(false);
+    const [, setDeviceIsSelected] = useState(false);
     const [device, setDevice] = useState({
         id: "",
         name: "",
@@ -24,7 +24,6 @@ function DeleteMappings(){
         age: "",
         type: ""
     });
-    const [users, setUsers] = useState( [] );
 
     const errors = {
         device: "device not selected",

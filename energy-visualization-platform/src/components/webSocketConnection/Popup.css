@@ -23,4 +23,12 @@
     position: absolute;
     top: 12px;
     right: 12px;
+    border-radius: 5px;
+    background-color: #4169e1;
+    color: white;
+    border-color: #4169e1;
+}
+
+.popup-inner .close-btn:hover {
+    background-color: #3353B2;
 }

@@ -11,15 +11,14 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry){
-        registry.addEndpoint("/ws").setAllowedOrigins("*").withSockJS();  //withSockJS() lets our WebSockets work even if the WebSocket PROTOCOL IS NOT SUPPORTED BY AN INTERNET BROWSER
+    public void configureMessageBroker(MessageBrokerRegistry config){
+        config.enableSimpleBroker( "/user"); // i don't need it
+        config.setUserDestinationPrefix("/user");
     }
 
     @Override
-    public void configureMessageBroker(MessageBrokerRegistry config){
-        config.setApplicationDestinationPrefixes("/app"); // prefix used to filter destinations handled by methods annotated with @MessageMapping
-        config.enableSimpleBroker( "/user");
-        config.setUserDestinationPrefix("/user");
+    public void registerStompEndpoints(StompEndpointRegistry registry){
+        registry.addEndpoint("/ws").setAllowedOrigins("*").withSockJS();  //withSockJS() lets our WebSockets work even if the WebSocket PROTOCOL IS NOT SUPPORTED BY AN INTERNET BROWSER
     }
 
 }

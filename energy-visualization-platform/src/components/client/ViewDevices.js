@@ -5,7 +5,7 @@ import axios from "axios";
 
 function ViewDevices(){
 
-    const [isSubmitted, setIsSubmitted] = useState(false);
+    const [, setIsSubmitted] = useState(false);
     const [device, setDevice] = useState({
         name: "",
         description: "",

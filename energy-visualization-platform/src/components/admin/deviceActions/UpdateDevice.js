@@ -8,7 +8,6 @@ function UpdateDevice(){
     const [errorMessages, setErrorMessages] = useState({});
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isSelected, setIsSelected] = useState(false);
-    const [selectedUser, setSelectedUser] = useState("");
     const [device, setDevice] = useState({
         name: "",
         description: "",

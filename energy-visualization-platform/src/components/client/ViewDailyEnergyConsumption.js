@@ -19,17 +19,10 @@ function ViewDailyEnergyConsumption(){
         maxHourlyEnergyConsumption: "",
         hourlyConsumption: {}
     });
-    const [hourlyEnergyConsumption, setHourlyEnergyConsumption] = useState({
-        device: [],
-        timestamp: "",
-        energyConsumption: ""
-    });
     const [energyConsumptionList, setEnergyConsumptionList] = useState( [] );
     const [selectedDate, setSelectedDate] = useState("");
     const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
     const [devices, setDevices] = useState( [] );
-
-    const [energyList, setEnergyList] = useState( [] );
 
     const [chartData, setChartData] = useState({
         datasets: []
