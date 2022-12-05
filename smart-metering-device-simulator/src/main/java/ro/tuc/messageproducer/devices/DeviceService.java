@@ -17,4 +17,9 @@ public class DeviceService {
         return devices;
     }
 
+    public Device getDeviceById(Integer deviceId) {
+        String URL = "http://localhost:8080/device/deviceById/" + deviceId;
+        return new RestTemplate().getForObject(URL, Device.class);
+    }
+
 }

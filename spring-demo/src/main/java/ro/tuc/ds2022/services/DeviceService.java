@@ -50,7 +50,12 @@ public class DeviceService {
     }
 
     public Device findDeviceById(Integer id) {
-        return deviceRepository.findById(id).orElse(null);
+        Device device = deviceRepository.findById(id).orElse(null);
+        if(device!=null){
+            device.setOwner(null);
+            device.setListHourlyConsumption(null);
+        }
+        return device;
     }
 
     public Device findDeviceByName(String name) {

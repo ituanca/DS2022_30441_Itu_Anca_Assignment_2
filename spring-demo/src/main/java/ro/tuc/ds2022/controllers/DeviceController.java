@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.tuc.ds2022.dtos.DeviceDTO;
+import ro.tuc.ds2022.entities.Device;
 import ro.tuc.ds2022.wrappers.DeviceList;
 import ro.tuc.ds2022.services.DeviceService;
 
@@ -105,6 +106,11 @@ public class DeviceController {
     public ResponseEntity<String> deleteAssociation(@RequestBody DeviceDTO deviceDTO) {
         String response = deviceService.deleteAssociationToClient(deviceDTO);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @GetMapping(value = "/deviceById/{id}")
+    public Device getDeviceById(@PathVariable("id") Integer deviceId) {
+        return deviceService.findDeviceById(deviceId);
     }
 
 }

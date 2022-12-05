@@ -64,7 +64,6 @@ public class HourlyEnergyConsumptionService {
            HourlyEnergyConsumption registeredEnergyConsumptionForDeviceByDateAndHour =
                    findEnergyConsumptionForDeviceByDateAndHour(measurement.getDeviceId(), measurement.getTimestamp());
            if(registeredEnergyConsumptionForDeviceByDateAndHour!=null) { // if there already exists a value registered for that hour
-               registeredEnergyConsumptionForDeviceByDateAndHour.setDevice(deviceService.findDeviceById(measurement.getDeviceId()));
                registeredEnergyConsumptionForDeviceByDateAndHour.setTimestamp(measurement.getTimestamp());
                registeredEnergyConsumptionForDeviceByDateAndHour.setEnergyConsumption(measurement.getEnergyConsumption());
                hourlyEnergyConsumptionRepository.save(registeredEnergyConsumptionForDeviceByDateAndHour);
@@ -97,7 +96,7 @@ public class HourlyEnergyConsumptionService {
                     double totalAtSpecifiedHour = consumption.getEnergyConsumption();
                     boolean limitExceeded = totalAtSpecifiedHour > device.getMaxHourlyEnergyConsumption();
                     if(limitExceeded){
-                        logger.info("EXCEEDED!!!! - " + device.getName());
+                        logger.info("THRESHOLD EXCEEDED!!!! - " + device.getName());
                         return true;
                     }
                 }
@@ -123,7 +122,7 @@ public class HourlyEnergyConsumptionService {
                                 .append(device.getName())
                                 .append(" consumed a quantity of ")
                                 .append(totalAtSpecifiedHour)
-                                .append("kW on ").append(consumption.getTimestamp().toLocalDate())
+                                .append("W on ").append(consumption.getTimestamp().toLocalDate())
                                 .append(" at ").append(consumption.getTimestamp().toLocalTime())
                                 .append(". The maximum accepted hourly energy consumption for this device is ")
                                 .append(device.getMaxHourlyEnergyConsumption())
