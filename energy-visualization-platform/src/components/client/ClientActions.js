@@ -7,7 +7,7 @@ function ClientActions(){
     return (
         <div className="app">
             <div className="login-form">
-                <h3>Clientzzzzzzzz</h3>
+                <h3>Client</h3>
                 <Connect/>
                 <div className="button-container">
                     <div>

@@ -51,21 +51,4 @@ public class Receiver {
         return measurement;
     }
 
-//    @RabbitListener(queues = ReceiverConfig.QUEUE_NAME)
-//    public void receiveMessage(List<String> message) throws ParseException {
-//        logger.info("Received message: " +  message);
-//        System.out.println("***" + message);
-//        List<Measurement> measurements = createArrayOfMeasurements(message);
-//        hourlyEnergyConsumptionService.insertEnergyConsumptionValues(measurements);
-//    }
-//
-//    private List<Measurement> createArrayOfMeasurements(List<String> measurementsStringList){
-//        List<Measurement> measurements = new ArrayList<>();
-//        for(String measurementString : measurementsStringList){
-//            Measurement measurement = convertStringToMeasurementObject(measurementString);
-//            measurements.add(measurement);
-//        }
-//        return measurements;
-//    }
-
 }
