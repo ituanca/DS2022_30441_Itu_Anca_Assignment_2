@@ -1,13 +1,20 @@
 package ro.tuc.messageproducer.middleware;
 
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.net.URISyntaxException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+
+import net.minidev.json.JSONObject;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -20,6 +27,7 @@ import ro.tuc.messageproducer.reader.ReaderConfig;
 
 import java.io.IOException;
 import java.util.Properties;
+import java.util.concurrent.TimeoutException;
 
 @Slf4j
 @Service
@@ -39,7 +47,7 @@ public class Sender {
 
     //@Scheduled(fixedDelay = 600000L)  // 10 minutes
     //@Scheduled(fixedDelay = 10000L)  // 10 seconds
-    @Scheduled(fixedDelay = 60000L)  // 1 minute
+    //@Scheduled(fixedDelay = 60000L)  // 1 minute
     public void composeAndSendMessage() throws IOException {
         List<Device> devices = getDevices();
         List<String> message = new ArrayList<>();
@@ -60,8 +68,7 @@ public class Sender {
         );
     }
 
-//    @Scheduled(fixedDelay = 60000L)  // 1 minute
-//    @Scheduled(fixedDelay = 10000L)  // 10 seconds
+    //@Scheduled(fixedDelay = 60000L)  // 1 minute
     public void composeAndSendMessageForSingleDevice() throws IOException {
         Device device = getDevice(readIdFromConfigFile());
         List<String> message = new ArrayList<>();
@@ -77,6 +84,23 @@ public class Sender {
                 ReaderConfig.ROUTING_KEY,
                 message
         );
+    }
+
+    @Scheduled(fixedDelay = 60000L)  // 1 minute
+    public void composeAndSendMessageTest() throws IOException, URISyntaxException, NoSuchAlgorithmException, KeyManagementException, TimeoutException {
+        Integer deviceId = readIdFromConfigFile();
+        Double energyConsumptionValue = readFromFileSingleDevice();
+        Measurement measurement = new Measurement(
+                LocalDateTime.now(ZoneId.of("Europe/Bucharest")), deviceId, energyConsumptionValue
+        );
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setUri("amqps://cfmlgvxp:DU0-aflUpbKtnLJYr2pxgvyf3IhMqYCc@sparrow.rmq.cloudamqp.com/cfmlgvxp");
+        Connection connection = factory.newConnection();
+        Channel channel = connection.createChannel();
+        channel.queueDeclare(ReaderConfig.QUEUE_NAME, true, false, false, null);
+        channel.basicPublish("", ReaderConfig.QUEUE_NAME, false, null, measurement.toString().getBytes());
+        System.out.println("measurement sent: " + measurement);
+        connection.close();
     }
 
     private Double readFromFile() throws IOException{

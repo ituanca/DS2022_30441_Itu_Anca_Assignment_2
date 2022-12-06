@@ -6,6 +6,7 @@ import Popup from "./Popup";
 export default function Connect() {
     const [username] = useState((JSON.parse(localStorage.getItem("user"))).username);
     const [message, setMessage] = useState("");
+    const [messageArray, setMessageArray] = useState([]);
     const [justStarted, setJustStarted] = useState(true);
     const [popupTriggered, setPopupTriggered] = useState(false);
 
@@ -22,6 +23,9 @@ export default function Connect() {
 
     const onPrivateMessageReceived = (payload) => {
         setMessage(payload.body)
+        let messageArrayLocal = (payload.body).split("***");
+        setMessageArray(messageArrayLocal);
+        console.log(messageArrayLocal)
         if(payload.body===username) {
             setPopupTriggered(false);
         }else{
@@ -29,7 +33,10 @@ export default function Connect() {
         }
     }
 
+    console.log(messageArray)
+
     const onConnected = () => {
+        console.log("cwcefcfervfrfre")
         if(justStarted){
             sendSignalToServer();
         }
@@ -44,7 +51,9 @@ export default function Connect() {
 
     return (
         <Popup trigger={popupTriggered} setTrigger={setPopupTriggered}>
-            {message}
+            {messageArray.map(message => {
+                return(<h5 className="message-text">{message}</h5>)
+            })}
         </Popup>
     )
 }

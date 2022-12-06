@@ -60,22 +60,41 @@ public class HourlyEnergyConsumptionService {
     }
 
     public void insertEnergyConsumptionValues(List<Measurement> measurements) throws ParseException {
-       for(Measurement measurement : measurements){
-           HourlyEnergyConsumption registeredEnergyConsumptionForDeviceByDateAndHour =
-                   findEnergyConsumptionForDeviceByDateAndHour(measurement.getDeviceId(), measurement.getTimestamp());
-           if(registeredEnergyConsumptionForDeviceByDateAndHour!=null) { // if there already exists a value registered for that hour
-               registeredEnergyConsumptionForDeviceByDateAndHour.setTimestamp(measurement.getTimestamp());
-               registeredEnergyConsumptionForDeviceByDateAndHour.setEnergyConsumption(measurement.getEnergyConsumption());
-               hourlyEnergyConsumptionRepository.save(registeredEnergyConsumptionForDeviceByDateAndHour);
-           }else{
-               HourlyEnergyConsumption hourlyEnergyConsumption =
-                       new HourlyEnergyConsumption(
-                               deviceService.findDeviceById(measurement.getDeviceId()),
-                               measurement.getTimestamp(),
-                               measurement.getEnergyConsumption());
-               hourlyEnergyConsumptionRepository.save(hourlyEnergyConsumption);
+       if(!measurements.isEmpty()){
+           for(Measurement measurement : measurements){
+               HourlyEnergyConsumption registeredEnergyConsumptionForDeviceByDateAndHour =
+                       findEnergyConsumptionForDeviceByDateAndHour(measurement.getDeviceId(), measurement.getTimestamp());
+               if(registeredEnergyConsumptionForDeviceByDateAndHour!=null) { // if there already exists a value registered for that hour
+                   registeredEnergyConsumptionForDeviceByDateAndHour.setTimestamp(measurement.getTimestamp());
+                   registeredEnergyConsumptionForDeviceByDateAndHour.setEnergyConsumption(measurement.getEnergyConsumption());
+                   hourlyEnergyConsumptionRepository.save(registeredEnergyConsumptionForDeviceByDateAndHour);
+               }else{
+                   HourlyEnergyConsumption hourlyEnergyConsumption =
+                           new HourlyEnergyConsumption(
+                                   deviceService.findDeviceById(measurement.getDeviceId()),
+                                   measurement.getTimestamp(),
+                                   measurement.getEnergyConsumption());
+                   hourlyEnergyConsumptionRepository.save(hourlyEnergyConsumption);
+               }
            }
        }
+    }
+
+    public void insertEnergyConsumptionValue(Measurement measurement) throws ParseException {
+        HourlyEnergyConsumption registeredEnergyConsumptionForDeviceByDateAndHour =
+                findEnergyConsumptionForDeviceByDateAndHour(measurement.getDeviceId(), measurement.getTimestamp());
+        if(registeredEnergyConsumptionForDeviceByDateAndHour!=null) { // if there already exists a value registered for that hour
+            registeredEnergyConsumptionForDeviceByDateAndHour.setTimestamp(measurement.getTimestamp());
+            registeredEnergyConsumptionForDeviceByDateAndHour.setEnergyConsumption(measurement.getEnergyConsumption());
+            hourlyEnergyConsumptionRepository.save(registeredEnergyConsumptionForDeviceByDateAndHour);
+        }else{
+            HourlyEnergyConsumption hourlyEnergyConsumption =
+                    new HourlyEnergyConsumption(
+                            deviceService.findDeviceById(measurement.getDeviceId()),
+                            measurement.getTimestamp(),
+                            measurement.getEnergyConsumption());
+            hourlyEnergyConsumptionRepository.save(hourlyEnergyConsumption);
+        }
     }
 
     private HourlyEnergyConsumption findEnergyConsumptionForDeviceByDateAndHour(Integer deviceId, LocalDateTime timestamp) {
@@ -108,6 +127,7 @@ public class HourlyEnergyConsumptionService {
     public String generateMessageForLimitExceeded(String username){
         Person person = personService.findPersonByUsername(username).orElse(null);
         StringBuilder message = new StringBuilder();
+        message.append(username).append(",").append("***");
         if(person!=null){
             List<Device> devices = person.getDevices();
             for(Device device : devices){
@@ -117,8 +137,7 @@ public class HourlyEnergyConsumptionService {
                     double totalAtSpecifiedHour = consumption.getEnergyConsumption();
                     boolean limitExceeded = totalAtSpecifiedHour > device.getMaxHourlyEnergyConsumption();
                     if(limitExceeded){
-                        message.append(username)
-                                .append(", your device ")
+                        message.append("your device ")
                                 .append(device.getName())
                                 .append(" consumed a quantity of ")
                                 .append(totalAtSpecifiedHour)
